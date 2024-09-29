@@ -1,0 +1,20 @@
+// types.js
+export const INCREMENT_COUNT = "INCREMENT_COUNT";
+export const DECREMENT_COUNT = "DECREMENT_COUNT";
+export const ADD_GROCERY_ITEM = "ADD_GROCERY_ITEM";
+export const REMOVE_GROCERY_ITEM = "REMOVE_GROCERY_ITEM";
+export const ADD_TO_CART = "ADD_TO_CART";
+export const CLEAR_FROM_CART = "CLEAR_FROM_CART";
+export const REMOVE_FROM_CART = "REMOVE_FROM_CART";
+export const SET_ON_BOARDED = "SET_ON_BOARDED";
+export const SET_USER = "SET_USER";
+export const CLEAR_USER = "CLEAR_USER";
+export const SET_LOADING = "SET_LOADING";
+export const SHOW_TOAST = 'SHOW_TOAST';
+export const HIDE_TOAST = 'HIDE_TOAST';
+export const USER_ADDRESS = 'USER_ADDRESS'
+export const SET_SHIPPING_CHARGES = 'SET_SHIPPING_CHARGES'
+export const SET_USER_COORDINATES = 'SET_USER_COORDINATES'
+export const SET_TOKEN = 'SET_TOKEN';
+export const CART_ID = 'CART_ID';
+export const REDEEM_CODE = "REDEEM_CODE"

@@ -1,20 +1,37 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import Home from './screens/Home';
+import CategoryProducts from './screens/CategoryProducts';
+import ProductDetails from './screens/ProductDetails';
+import { Provider } from "react-redux";
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistor, store } from './store';
+import AppToast from './components/AppToast';
+import { SafeAreaProvider } from 'react-native-safe-area-context'; // Import SafeAreaProvider
+import { SafeAreaView } from 'react-native';
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+
+    <SafeAreaProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+       {/* Wrap NavigationContainer with SafeAreaProvider */}
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName="Home">
+              <Stack.Screen name="Home" component={Home} />
+              <Stack.Screen name="CategoryProducts" component={CategoryProducts} />
+              <Stack.Screen name="ProductDetails" component={ProductDetails} />
+            </Stack.Navigator>
+            <StatusBar style="auto" />
+          </NavigationContainer>
+          <AppToast /> 
+        
+      </PersistGate>
+    </Provider>
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
