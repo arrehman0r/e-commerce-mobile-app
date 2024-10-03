@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { View, ScrollView, Image, StyleSheet } from 'react-native';
 import { Button, Text, IconButton, Card, Chip } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { addGroceryItem, addToCart, removeFromCart } from '../store/actions/grocery';
 
 const ProductDetails = ({ route }) => {
     const { product } = route.params;
-    const [cart, setCart] = useState({});
+    const { cart } = useSelector((state) => state.groceryState);
+    const dispatch = useDispatch();
+
     const [selectedVariant, setSelectedVariant] = useState(product.variants[0].id); // First variant selected by default
 
     const selectedVariantObject = product.variants.find(variant => variant.id === selectedVariant);
@@ -14,32 +18,18 @@ const ProductDetails = ({ route }) => {
     const currency = selectedVariantObject?.prices?.[0]?.currency_code.toUpperCase() || 'N/A';
 
 
-    const addToCart = (productId) => {
-        setCart((prevCart) => ({
-            ...prevCart,
-            [productId]: (prevCart[productId] || 0) + 1,
-        }));
+    const cartCount = () => {
+        return selectedVariant ? (cart[selectedVariant] || 0) : 0;
     };
 
-    const incrementCount = (productId) => {
-        setCart((prevCart) => ({
-            ...prevCart,
-            [productId]: prevCart[productId] + 1,
-        }));
-    };
+    const handleOnPress = (type, selectedVariant) => {
+        if (type === "MINUS") {
+            dispatch(removeFromCart(selectedVariant, 1));
+        } else if (type === "PLUS") {
+            dispatch(addGroceryItem(product));
+            dispatch(addToCart(selectedVariant, 1));
 
-    const decrementCount = (productId) => {
-        setCart((prevCart) => {
-            const newCount = prevCart[productId] - 1;
-            if (newCount <= 0) {
-                const { [productId]: removed, ...rest } = prevCart;
-                return rest;
-            }
-            return {
-                ...prevCart,
-                [productId]: newCount,
-            };
-        });
+        }
     };
     console.log("variant price is ", product.variants[0].prices)
     return (
@@ -81,24 +71,28 @@ const ProductDetails = ({ route }) => {
             {/* Buy Now/Counter at the Bottom */}
             <View style={styles.bottomContainer}>
                 <Card.Actions style={styles.actions}>
-                    {cart[product.id] ? (
+                    {cartCount() > 0 ? (
                         <View style={styles.counterContainer}>
                             <IconButton
                                 icon="minus"
-                                onPress={() => decrementCount(product.id)}
-                                size={20}
+                                onPress={() => handleOnPress("MINUS", selectedVariant)}
+                                style={styles.iconButtons}
+
+                                size={30}
                             />
-                            <Text>{cart[product.id]}</Text>
+                            <Text style={styles.count}>{cartCount()}</Text>
                             <IconButton
                                 icon="plus"
-                                onPress={() => incrementCount(product.id)}
-                                size={20}
+                                onPress={() => handleOnPress("PLUS", selectedVariant)}
+                                style={styles.iconButtons}
+                                size={30}
                             />
                         </View>
                     ) : (
                         <Button
                             mode="contained"
-                            onPress={() => addToCart(product.id)}
+                            onPress={() => handleOnPress("PLUS", selectedVariant)}
+
                             style={styles.fullWidthButton}
                             contentStyle={styles.buttonContent}
                         >
@@ -139,6 +133,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#2b2b2b',
     },
+    count: {
+        fontWeight: 'bold',
+        color: '#2b2b2b',
+        fontSize: 30
+    },
     variantsContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
@@ -150,11 +149,18 @@ const styles = StyleSheet.create({
         marginTop: 8,
     },
     actions: {
-        justifyContent: 'space-between',
+        justifyContent: 'center',
+    },
+    iconButtons:{
+        backgroundColor: "#ddd"
     },
     counterContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        gap: 20
+
     },
     bottomContainer: {
         backgroundColor: '#fff',

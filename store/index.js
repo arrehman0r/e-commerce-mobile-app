@@ -7,6 +7,7 @@ import rootReducer from './reducers'; // Make sure this path is correct
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
+  blacklist:["groceryState"]
 };
 
 // Create a persisted reducer
