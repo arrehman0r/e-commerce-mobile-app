@@ -6,6 +6,7 @@ const Home = ({ navigation }) => {
     const [categories, setAllCategories] = useState([])
     const fetchAllCategories = async () => {
         const res = await getAllCategories();
+        console.log("res of products is ",res)
         setAllCategories(res?.product_categories)
 
     }

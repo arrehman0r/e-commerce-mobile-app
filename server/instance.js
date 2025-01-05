@@ -1,6 +1,6 @@
 import axios from 'axios';
 // import Cookies from 'js-cookie';
-import { REACT_NATIVE_PUBLIC_DEV_URL } from '../env';
+import { PUBLISHABLE_API_KEY, REACT_NATIVE_PUBLIC_DEV_URL } from '../env';
 
 export const baseURL = REACT_NATIVE_PUBLIC_DEV_URL;
 
@@ -23,7 +23,8 @@ export const makeRequest = async (type, path, body = null, options = {}) => {
     // Setup headers
     const headers = {
       ...options.headers,
-      'auth-token': token ? token : null,
+      // 'auth-token': token ? token : null,
+      "x-publishable-api-key": PUBLISHABLE_API_KEY
     };
 
     // If the body is an instance of FormData, set the appropriate Content-Type

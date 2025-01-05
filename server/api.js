@@ -5,5 +5,6 @@ export const getAllCategories = () => {
   }
 
   export const getCategoryProducts = (id) => {
-    return makeRequest("get", `products?category_id[0]=${id}`);
+    
+    return makeRequest("get", `products/${id}`);
   }

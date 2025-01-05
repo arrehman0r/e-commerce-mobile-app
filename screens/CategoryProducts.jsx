@@ -18,9 +18,10 @@ const CategoryProducts = ({ navigation, route }) => {
     const [selectedVariant, setSelectedVariant] = useState(null);
 
     const dispatch = useDispatch();
-
+console.log("category id is ", categoryId)
     const fetchCategoryProducts = async () => {
         const res = await getCategoryProducts(categoryId);
+        console.log("so this is rt",res)
         setProducts(res?.products);
     };
 
