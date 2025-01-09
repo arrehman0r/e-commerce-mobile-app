@@ -2,7 +2,7 @@ import React from 'react';
 import { SafeAreaView } from 'react-native';
 import { Snackbar } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
-import { HIDE_TOAST } from '../store/actions/types';
+import { HIDE_TOAST } from '../../store/actions/types';
 
 const AppToast = () => {
     const dispatch = useDispatch();

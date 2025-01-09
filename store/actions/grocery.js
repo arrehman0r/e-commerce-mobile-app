@@ -1,48 +1,31 @@
 import {
   ADD_TO_CART,
-  CLEAR_FROM_CART,
   ADD_GROCERY_ITEM,
+  CLEAR_FROM_CART,
   REMOVE_FROM_CART,
   REMOVE_GROCERY_ITEM,
-} from "../actions/types";
+} from "./types";
 
-export const addGroceryItem = (groceryItem) => {
-  return {
-    type: ADD_GROCERY_ITEM,
-    payload: groceryItem,
-  };
-};
+export const addGroceryItem = (product) => ({
+  type: ADD_GROCERY_ITEM,
+  payload: product
+});
 
-export const addToCart = (itemId, quantity) => {
-  return {
-    type: ADD_TO_CART,
-    payload: {
-      itemId,
-      quantity,
-    },
-  };
-};
+export const removeGroceryItem = (productId) => ({
+  type: REMOVE_GROCERY_ITEM,
+  payload: { id: productId }
+});
 
-export const removeGroceryItem = (groceryItem) => {
-  return {
-    type: REMOVE_GROCERY_ITEM,
-    payload: groceryItem,
-  };
-};
+export const addToCart = (variantId, quantity = 1) => ({
+  type: ADD_TO_CART,
+  payload: { variantId, quantity }
+});
 
-export const removeFromCart = (itemId, quantity) => {
-  return {
-    type: REMOVE_FROM_CART,
-    payload: {
-      itemId,
-      quantity,
-    },
-  };
-};
+export const removeFromCart = (variantId, quantity = 1) => ({
+  type: REMOVE_FROM_CART,
+  payload: { variantId, quantity }
+});
 
-export const clearFromCart = (groceryItem) => {
-  return {
-    type: CLEAR_FROM_CART,
-    payload: groceryItem,
-  };
-};
+export const clearCart = () => ({
+  type: CLEAR_FROM_CART
+});

@@ -1,35 +1,66 @@
-import React, { useEffect, useState } from 'react';
-import { Card, List } from 'react-native-paper';
-import { getAllCategories } from '../server/api';
-import { View, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Text } from 'react-native-paper';
+import { useCategories } from '../services/queries';
+import CategoryHeader from '../components/CategoryHeader'; 
+import CategoryProducts from '../components/CategoryProducts';
+
 const Home = ({ navigation }) => {
-    const [categories, setAllCategories] = useState([])
-    const fetchAllCategories = async () => {
-        const res = await getAllCategories();
-        console.log("res of products is ",res)
-        setAllCategories(res?.product_categories)
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  
+  const { 
+    data: categories = [], 
+    isLoading, 
+    isError, 
+    error,
+    refetch 
+  } = useCategories();
 
+  useEffect(() => {
+    if (categories.length > 0 && !selectedCategoryId) {
+      setSelectedCategoryId(categories[0].id);
     }
-    useEffect(() => {
-        fetchAllCategories()
-    }, [])
+  }, [categories]);
 
+  if (isLoading) {
     return (
-        <View>
-            <Card>
-                <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
-            </Card>
-
-
-            <List.AccordionGroup>
-                {categories.length > 0 && categories.map((category) => (
-                    <List.Accordion title={category.name} id={category.id} key={category?.id}>
-                        <List.Item title={category.name} onPress={() => navigation.navigate("CategoryProducts", { categoryId: category?.id })} />
-                    </List.Accordion>
-                ))}
-
-            </List.AccordionGroup></View>
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" />
+      </View>
     );
-}
+  }
 
-export default Home
+  if (isError) {
+    return (
+      <View style={styles.centered}>
+        <Text>Error: {error.message}</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <CategoryHeader
+        categories={categories}
+        selectedId={selectedCategoryId}
+        onSelect={setSelectedCategoryId}
+      />
+      {selectedCategoryId && (
+        <CategoryProducts categoryId={selectedCategoryId} />
+      )}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export default Home;

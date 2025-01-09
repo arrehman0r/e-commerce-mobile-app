@@ -1,6 +1,10 @@
-import axios from 'axios';
+import axios from "axios";
 // import Cookies from 'js-cookie';
-import { PUBLISHABLE_API_KEY, REACT_NATIVE_PUBLIC_DEV_URL } from '../env';
+import {
+  PUBLISHABLE_API_KEY,
+  REACT_NATIVE_PUBLIC_DEV_URL,
+  REGIOD_ID,
+} from "../env";
 
 export const baseURL = REACT_NATIVE_PUBLIC_DEV_URL;
 
@@ -8,30 +12,29 @@ export const instance = axios.create({
   baseURL: baseURL,
   timeout: 30000,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
 export const makeRequest = async (type, path, body = null, options = {}) => {
-
   try {
     // Retrieve token from cookies
     // const token = Cookies.get('auth-token');
     const token = false;
 
-
     // Setup headers
     const headers = {
       ...options.headers,
       // 'auth-token': token ? token : null,
-      "x-publishable-api-key": PUBLISHABLE_API_KEY
+      "x-publishable-api-key": PUBLISHABLE_API_KEY,
+      "region_id": REGIOD_ID,
     };
 
     // If the body is an instance of FormData, set the appropriate Content-Type
     if (body instanceof FormData) {
-      headers['Content-Type'] = 'multipart/form-data';
+      headers["Content-Type"] = "multipart/form-data";
     } else if (body) {
-      headers['Content-Type'] = 'application/json';
+      headers["Content-Type"] = "application/json";
     }
 
     // Create the config object
@@ -45,34 +48,34 @@ export const makeRequest = async (type, path, body = null, options = {}) => {
 
     // Perform the request based on the type
     switch (type.toUpperCase()) {
-      case 'GET':
+      case "GET":
         response = await instance.get(path, config);
         break;
-      case 'POST':
+      case "POST":
         response = await instance.post(path, body, config);
         break;
-      case 'PUT':
+      case "PUT":
         response = await instance.put(path, body, config);
         break;
-        case 'PATCH':
-          response = await instance.patch(path, body, config);
-          break;
-      case 'DELETE':
+      case "PATCH":
+        response = await instance.patch(path, body, config);
+        break;
+      case "DELETE":
         response = await instance.delete(path, config);
         break;
       default:
-        throw new Error('Unsupported request type');
+        throw new Error("Unsupported request type");
     }
 
     return response;
   } catch (error) {
-    console.error('Error making request:', error);
+    console.error("Error making request:", error);
 
     // Handle specific errors
     if (error.response?.status === 401) {
       // Handle unauthorized error, such as refreshing tokens or redirecting
       // ToastNotification('error', 'Session expired. Please login again');
-    } else if (error.code === 'ECONNABORTED') {
+    } else if (error.code === "ECONNABORTED") {
       // Handle timeout
       // ToastNotification('error', 'Request timed out');
     }
@@ -80,7 +83,6 @@ export const makeRequest = async (type, path, body = null, options = {}) => {
     throw error; // Re-throw error after logging/handling
   }
 };
-
 
 // Optional: Request interceptor for adding authentication or other common headers
 instance.interceptors.request.use(

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Button, Card, Text, IconButton, Modal, Portal, Provider } from 'react-native-paper';
-import { getCategoryProducts } from '../server/api';
+import { getCategoryProducts } from '../services/api';
 import { View, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { addGroceryItem, addToCart, removeFromCart } from '../store/actions/grocery';
 import { useDispatch, useSelector } from 'react-redux';
