@@ -41,7 +41,7 @@ export const calculateCartTotal = (cart = {}, groceryItems = []) => {
  * Format price with currency
  */
 export const formatPrice = (amount, currencyCode = 'PKR') => {
-  return `${currencyCode.toUpperCase()} ${(amount / 100).toFixed(2)}`;
+  return `${currencyCode.toUpperCase()} ${(amount)}`;
 };
 
 /**
@@ -59,3 +59,5 @@ export const getVariantInfo = (variant) => {
     hasDiscount: variant.calculated_price?.calculated_amount < variant.calculated_price?.original_amount
   };
 };
+
+

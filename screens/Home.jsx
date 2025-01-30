@@ -46,7 +46,7 @@ const Home = ({ navigation }) => {
         onSelect={setSelectedCategoryId}
       />
       {selectedCategoryId && (
-        <CategoryProducts categoryId={selectedCategoryId} />
+        <CategoryProducts categoryId={selectedCategoryId} navigation= {navigation} />
       )}
     </View>
   );

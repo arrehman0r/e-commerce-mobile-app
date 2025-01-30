@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native';
 import { Snackbar } from 'react-native-paper';
 import { useDispatch, useSelector } from 'react-redux';
 import { HIDE_TOAST } from '../../store/actions/types';
+import { COLORS } from '../../theme';
 
 const AppToast = () => {
     const dispatch = useDispatch();
@@ -15,11 +16,13 @@ const AppToast = () => {
         <Snackbar
             visible={visible}
             onDismiss={onDismissSnackBar}
+            style={{ backgroundColor: COLORS.PRIMARY }}
             action={{
                 label: 'Close',
                 onPress: () => {
-                    // Do something
+                    onDismissSnackBar()
                 },
+                textColor: 'white',
             }}
         >
             {message}

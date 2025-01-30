@@ -2,12 +2,13 @@ import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Home from "./screens/Home";
-import CategoryProducts from "./screens/CategoryProducts";
 import ProductDetails from "./screens/ProductDetails";
+import Cart from "./screens/Cart";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "./store";
 import AppToast from "./components/common/AppToast";
+import CartButton from "./components/common/CartButton";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
@@ -23,7 +24,7 @@ import {
   PlayfairDisplay_700Bold,
 } from "@expo-google-fonts/playfair-display";
 import { PaperProvider } from "react-native-paper";
-import { theme } from "./theme"; 
+import { theme } from "./theme";
 
 const Stack = createStackNavigator();
 
@@ -61,7 +62,7 @@ export default function App() {
           <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
               <NavigationContainer>
-                <Stack.Navigator 
+                <Stack.Navigator
                   initialRouteName="Home"
                   screenOptions={{
                     headerStyle: {
@@ -71,15 +72,31 @@ export default function App() {
                     headerTitleStyle: {
                       fontFamily: 'Poppins_600SemiBold',
                     },
+                    headerRight: () => <CartButton />,
                   }}
                 >
-                  <Stack.Screen name="Home" component={Home} />
-                  <Stack.Screen name="CategoryProducts" component={CategoryProducts} />
-                  <Stack.Screen name="ProductDetails" component={ProductDetails} />
+                  <Stack.Screen 
+                    name="Home" 
+                    component={Home}
+                  />
+                  <Stack.Screen
+                    name="ProductDetails"
+                    component={ProductDetails}
+                    options={{
+                      title: "Product Details"
+                    }}
+                  />
+                  <Stack.Screen
+                    name="Cart"
+                    component={Cart}
+                    options={{
+                      headerRight: null // Remove cart button from cart screen
+                    }}
+                  />
                 </Stack.Navigator>
-                <StatusBar style="auto" />
+                <StatusBar style="light" />
+                <AppToast />
               </NavigationContainer>
-              <AppToast />
             </PersistGate>
           </Provider>
         </PaperProvider>

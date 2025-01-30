@@ -1,108 +1,108 @@
 import React, { useState } from 'react';
 import { View, ScrollView, Image, StyleSheet } from 'react-native';
 import { Button, Text, IconButton, Card, Chip } from 'react-native-paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { COLORS } from '../theme';
+import { PriceDisplay } from '../components/PriceDisplay';
+import { useQuantityHandler } from '../utils/productHandlers';
+import { getVariantQuantity } from '../utils/cartUtils';
 
 const ProductDetails = ({ route }) => {
     const { product } = route.params;
-    const [cart, setCart] = useState({});
-    const [selectedVariant, setSelectedVariant] = useState(product.variants[0].id); // First variant selected by default
+    const cart = useSelector((state) => state.groceryState.cart);
+    const [selectedVariant, setSelectedVariant] = useState(product.variants[0]);
+    const handleQuantityChange = useQuantityHandler();
 
-    const selectedVariantObject = product.variants.find(variant => variant.id === selectedVariant);
+    const cartCount = getVariantQuantity(cart, selectedVariant.id);
 
-    // Assuming you want to use the first price in the array for now:
-    const selectedPrice = selectedVariantObject?.prices?.[0]?.amount || 'N/A';
-    const currency = selectedVariantObject?.prices?.[0]?.currency_code.toUpperCase() || 'N/A';
-
-
-    const addToCart = (productId) => {
-        setCart((prevCart) => ({
-            ...prevCart,
-            [productId]: (prevCart[productId] || 0) + 1,
-        }));
+    const handleIncrement = () => {
+        handleQuantityChange("PLUS", selectedVariant, product);
     };
 
-    const incrementCount = (productId) => {
-        setCart((prevCart) => ({
-            ...prevCart,
-            [productId]: prevCart[productId] + 1,
-        }));
+    const handleDecrement = () => {
+        handleQuantityChange("MINUS", selectedVariant, product);
     };
 
-    const decrementCount = (productId) => {
-        setCart((prevCart) => {
-            const newCount = prevCart[productId] - 1;
-            if (newCount <= 0) {
-                const { [productId]: removed, ...rest } = prevCart;
-                return rest;
-            }
-            return {
-                ...prevCart,
-                [productId]: newCount,
-            };
-        });
+    const handleAddToCart = () => {
+        handleQuantityChange("PLUS", selectedVariant, product);
     };
-    console.log("variant price is ", product.variants[0].prices)
+
     return (
-        <View style={styles.container} >
+        <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 <View style={styles.card}>
-                    <Image source={{ uri: product.thumbnail }} style={styles.image} />
+                    <Image 
+                        source={{ uri: product.thumbnail }} 
+                        style={styles.image} 
+                    />
                     <Card.Content>
-                        <Text variant="headlineMedium">{product.title}</Text>
+                        <Text variant="headlineMedium" style={styles.title}>
+                            {product.title}
+                        </Text>
 
-                        {selectedVariantObject && (
-                            <Text variant="titleLarge" style={styles.price}>
-                                {selectedPrice !== 'N/A' ? `${currency} ${selectedPrice}` : 'Price not available'}
-                            </Text>
+                        {selectedVariant && (
+                            <PriceDisplay variant={selectedVariant} />
                         )}
-
 
                         <View style={styles.variantsContainer}>
                             {product.variants.map((variant) => (
                                 <Chip
                                     key={variant.id}
-                                    selected={selectedVariant === variant.id}
-                                    onPress={() => setSelectedVariant(variant.id)}
-                                    style={styles.chip}
+                                    selected={selectedVariant.id === variant.id}
+                                    onPress={() => setSelectedVariant(variant)}
+                                    style={[
+                                        styles.chip,
+                                        selectedVariant.id === variant.id && styles.selectedChip
+                                    ]}
+                                    textStyle={[
+                                        styles.chipText,
+                                        selectedVariant.id === variant.id && styles.selectedChipText
+                                    ]}
                                 >
                                     {variant.title}
                                 </Chip>
                             ))}
                         </View>
+
                         <Text variant="bodySmall" style={styles.subtitle}>
                             {product.subtitle}
                         </Text>
-                        <Text variant="bodyMedium">{product.description}</Text>
-
+                        <Text variant="bodyMedium" style={styles.description}>
+                            {product.description}
+                        </Text>
                     </Card.Content>
                 </View>
             </ScrollView>
 
-            {/* Buy Now/Counter at the Bottom */}
             <View style={styles.bottomContainer}>
                 <Card.Actions style={styles.actions}>
-                    {cart[product.id] ? (
+                    {cartCount > 0 ? (
                         <View style={styles.counterContainer}>
                             <IconButton
                                 icon="minus"
-                                onPress={() => decrementCount(product.id)}
+                                mode="contained-tonal"
+                                onPress={handleDecrement}
                                 size={20}
+                                disabled={cartCount === 0}
                             />
-                            <Text>{cart[product.id]}</Text>
+                            <Text style={styles.quantityText}>{cartCount}</Text>
                             <IconButton
                                 icon="plus"
-                                onPress={() => incrementCount(product.id)}
+                                mode="contained-tonal"
+                                onPress={handleIncrement}
                                 size={20}
+                                disabled={!selectedVariant.manage_inventory && cartCount > 0}
                             />
                         </View>
                     ) : (
                         <Button
                             mode="contained"
-                            onPress={() => addToCart(product.id)}
+                            onPress={handleAddToCart}
                             style={styles.fullWidthButton}
                             contentStyle={styles.buttonContent}
+                            disabled={!selectedVariant}
                         >
-                            Buy Now
+                            Add to Cart
                         </Button>
                     )}
                 </Card.Actions>
@@ -114,11 +114,10 @@ const ProductDetails = ({ route }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'space-between',
-        backgroundColor: '#fff',
+        backgroundColor: COLORS.BACKGROUND,
     },
     scrollContent: {
-        paddingBottom: 150, // Give enough padding for the bottom container
+        paddingBottom: 150,
     },
     card: {
         marginBottom: 10,
@@ -128,47 +127,75 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 300,
         resizeMode: 'contain',
-        backgroundColor: '#fff',
+        backgroundColor: COLORS.BACKGROUND,
+    },
+    title: {
+        fontFamily: 'Poppins_600SemiBold',
+        color: COLORS.TEXT_PRIMARY,
+        marginBottom: 8,
     },
     subtitle: {
-        marginTop: 5,
-        color: '#6c757d',
+        marginTop: 12,
+        color: COLORS.TEXT_SECONDARY,
+        fontFamily: 'Poppins_400Regular',
     },
-    price: {
-        marginTop: 10,
-        fontWeight: 'bold',
-        color: '#2b2b2b',
+    description: {
+        marginTop: 8,
+        color: COLORS.TEXT_PRIMARY,
+        fontFamily: 'Poppins_400Regular',
     },
     variantsContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        marginTop: 2,
-        marginBottom: 20,
+        marginTop: 16,
     },
     chip: {
         marginRight: 8,
-        marginTop: 8,
+        marginBottom: 8,
+        backgroundColor: COLORS.BACKGROUND,
+        borderColor: COLORS.PRIMARY,
+    },
+    selectedChip: {
+        backgroundColor: COLORS.PRIMARY,
+    },
+    chipText: {
+        color: COLORS.PRIMARY,
+        fontFamily: 'Poppins_500Medium',
+    },
+    selectedChipText: {
+        color: COLORS.TEXT_WHITE,
     },
     actions: {
-        justifyContent: 'space-between',
+        justifyContent: 'center',
     },
     counterContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        gap: 16,
+    },
+    quantityText: {
+        fontFamily: 'Poppins_600SemiBold',
+        color: COLORS.TEXT_PRIMARY,
+        fontSize: 18,
     },
     bottomContainer: {
-        backgroundColor: '#fff',
-        padding: 10,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: COLORS.CARD_BACKGROUND,
+        padding: 16,
         borderTopWidth: 1,
-        borderColor: '#ddd',
+        borderColor: COLORS.BORDER,
+        elevation: 4,
     },
     fullWidthButton: {
         width: '100%',
-        justifyContent: 'center',
     },
     buttonContent: {
-        justifyContent: 'center',
-        paddingVertical: 10,
+        paddingVertical: 8,
     },
 });
 
