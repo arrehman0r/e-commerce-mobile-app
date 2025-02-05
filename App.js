@@ -25,6 +25,10 @@ import {
 } from "@expo-google-fonts/playfair-display";
 import { PaperProvider } from "react-native-paper";
 import { theme } from "./theme";
+import DrawerButton from "./components/common/DrawerButton";
+import Login from "./screens/Login";
+import Signup from "./screens/Signup";
+import Profile from "./screens/Profile";
 
 const Stack = createStackNavigator();
 
@@ -73,10 +77,26 @@ export default function App() {
                       fontFamily: 'Poppins_600SemiBold',
                     },
                     headerRight: () => <CartButton />,
+                    headerLeft: () => <DrawerButton />,
                   }}
                 >
-                  <Stack.Screen 
-                    name="Home" 
+                  <Stack.Screen
+                    name="Login"
+                    component={Login}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="Signup"
+                    component={Signup}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="Profile"
+                    component={Profile}
+                    options={{ title: "My Profile" }}
+                  />
+                  <Stack.Screen
+                    name="Home"
                     component={Home}
                   />
                   <Stack.Screen

@@ -50,6 +50,7 @@ const ProductDetails = ({ route }) => {
                                     key={variant.id}
                                     selected={selectedVariant.id === variant.id}
                                     onPress={() => setSelectedVariant(variant)}
+                                    mode='outlined'
                                     style={[
                                         styles.chip,
                                         selectedVariant.id === variant.id && styles.selectedChip
@@ -82,16 +83,26 @@ const ProductDetails = ({ route }) => {
                                 icon="minus"
                                 mode="contained-tonal"
                                 onPress={handleDecrement}
-                                size={20}
+                                size={24}
                                 disabled={cartCount === 0}
+                                style={[
+                                    styles.iconButton,
+                                    cartCount === 0 && styles.disabledIconButton
+                                ]}
+                                iconColor="white"
                             />
                             <Text style={styles.quantityText}>{cartCount}</Text>
                             <IconButton
                                 icon="plus"
                                 mode="contained-tonal"
                                 onPress={handleIncrement}
-                                size={20}
+                                size={24}
                                 disabled={!selectedVariant.manage_inventory && cartCount > 0}
+                                style={[
+                                    styles.iconButton,
+                                    (!selectedVariant.manage_inventory && cartCount > 0) && styles.disabledIconButton
+                                ]}
+                                  iconColor="white"
                             />
                         </View>
                     ) : (
@@ -173,12 +184,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
-        gap: 16,
+        gap: 26,
     },
     quantityText: {
         fontFamily: 'Poppins_600SemiBold',
         color: COLORS.TEXT_PRIMARY,
-        fontSize: 18,
+        fontSize: 24,
     },
     bottomContainer: {
         position: 'absolute',
@@ -197,6 +208,14 @@ const styles = StyleSheet.create({
     buttonContent: {
         paddingVertical: 8,
     },
+    iconButton: {
+        backgroundColor: COLORS.PRIMARY,
+    },
+    disabledIconButton: {
+        backgroundColor: COLORS.DISABLED, 
+        opacity: 0.5, 
+    },
+
 });
 
 export default ProductDetails;

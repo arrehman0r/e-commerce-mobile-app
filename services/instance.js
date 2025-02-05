@@ -17,6 +17,8 @@ export const instance = axios.create({
 });
 
 export const makeRequest = async (type, path, body = null, options = {}) => {
+
+  console.log("optionsare pojerpoivj", options?.headers)
   try {
     // Retrieve token from cookies
     // const token = Cookies.get('auth-token');
@@ -24,10 +26,11 @@ export const makeRequest = async (type, path, body = null, options = {}) => {
 
     // Setup headers
     const headers = {
-      ...options.headers,
       // 'auth-token': token ? token : null,
       "x-publishable-api-key": PUBLISHABLE_API_KEY,
       "region_id": REGIOD_ID,
+      ...options.headers,
+
     };
 
     // If the body is an instance of FormData, set the appropriate Content-Type
@@ -41,8 +44,22 @@ export const makeRequest = async (type, path, body = null, options = {}) => {
     const config = {
       timeout: 30000,
       headers,
+      credentials: "include",
       ...options,
     };
+
+    console.log('🚀 Complete Request Details:', {
+      method: type.toUpperCase(),
+      url: `${baseURL}${path}`,
+      headers: config.headers,
+      body: body,
+      config: {
+        timeout: config.timeout,
+        credentials: config.credentials,
+        ...config
+      }
+    });
+
 
     let response;
 
@@ -102,6 +119,7 @@ instance.interceptors.response.use(
     return response.data;
   },
   (error) => {
+    console.log("error from instance", error)
     if (error.response?.status === 401) {
       // Handle 401 errors, e.g., redirect or clear local storage
       // window.location.reload(true);
