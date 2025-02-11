@@ -14,16 +14,22 @@
     },
     "ios": {
       "supportsTablet": true
-     
     },
     "android": {
+      "kotlinVersion": "1.9.25",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.arrehman.foodapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2cffac79-cc44-4cb8-ac60-389b54b25875"
+      }
     }
   }
 }

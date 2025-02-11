@@ -1,11 +1,13 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Drawer, Portal, Modal, IconButton, Avatar, Text, Button } from 'react-native-paper';
-import { COLORS } from '../theme'; 
+import { COLORS } from '../theme';
 import { fontConfig } from '../theme/fonts';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
-import { clearUser } from '../store/actions/user';
+import { clearUser, setToken } from '../store/actions/user';
+import { showToast } from '../store/actions/toast';
+import { clearCart } from '../store/actions/grocery';
 
 export default function ProfileDrawer({ visible, onDismiss }) {
   const navigation = useNavigation();
@@ -20,13 +22,17 @@ export default function ProfileDrawer({ visible, onDismiss }) {
   };
 
   const handleLogout = () => {
+    dispatch(showToast("Sign out successfully!"))
     dispatch(clearUser());
+    dispatch(setToken(null))
+    dispatch(clearCart())
+    navigation.navigate("Home")
     onDismiss();
   };
 
   const handleLogin = () => {
     onDismiss();
-    navigation.navigate('Login');
+    navigation.navigate('Login', { fromCart: false });
   };
 
   const renderGuestView = () => (
@@ -70,6 +76,12 @@ export default function ProfileDrawer({ visible, onDismiss }) {
       </View>
 
       <Drawer.Section>
+      <Drawer.Item
+          icon="home"
+          label="Home"
+          active={active === 'Home'}
+          onPress={() => navigateAndClose('Home')}
+        />
         <Drawer.Item
           icon="account"
           label="My Profile"
@@ -86,25 +98,25 @@ export default function ProfileDrawer({ visible, onDismiss }) {
           icon="map-marker"
           label="Delivery Addresses"
           active={active === 'Addresses'}
-          onPress={() => navigateAndClose('Addresses')}
+          onPress={() => navigateAndClose('AddressList')}
         />
         <Drawer.Item
           icon="heart"
           label="Favorites"
           active={active === 'Favorites'}
-          onPress={() => navigateAndClose('Favorites')}
+        // onPress={() => navigateAndClose('Favorites')}
         />
         <Drawer.Item
           icon="bell"
           label="Notifications"
           active={active === 'Notifications'}
-          onPress={() => navigateAndClose('Notifications')}
+        // onPress={() => navigateAndClose('Notifications')}
         />
         <Drawer.Item
           icon="cog"
           label="Settings"
           active={active === 'Settings'}
-          onPress={() => navigateAndClose('Settings')}
+        // onPress={() => navigateAndClose('Settings')}
         />
       </Drawer.Section>
 

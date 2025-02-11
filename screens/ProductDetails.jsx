@@ -51,6 +51,7 @@ const ProductDetails = ({ route }) => {
                                     selected={selectedVariant.id === variant.id}
                                     onPress={() => setSelectedVariant(variant)}
                                     mode='outlined'
+                                    showSelectedCheck={false}
                                     style={[
                                         styles.chip,
                                         selectedVariant.id === variant.id && styles.selectedChip

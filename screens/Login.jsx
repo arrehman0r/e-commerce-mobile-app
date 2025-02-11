@@ -9,13 +9,14 @@ import { useDispatch } from 'react-redux';
 import { setToken, setUser } from '../store/actions/user';
 import { showToast } from '../store/actions/toast';
 
-export default function Login({ navigation }) {
+export default function Login({ route, navigation }) {
   const dispatch = useDispatch()
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [loading, setLoading] = useState(false);
-
+  const { fromCart } = route.params || {};
+  console.log("from cart is ", !!fromCart)
   const handleLogin = async () => {
     setLoading(true);
     try {
@@ -35,12 +36,19 @@ export default function Login({ navigation }) {
       console.log("res of login is ", userProfile?.customer)
 
     } catch (error) {
-      console.error('Login error:', error);
+      console.error('Login error:', error?.code);
+      dispatch(showToast(error?.code || "Login failed"))
+
     } finally {
       setLoading(false);
     }
   };
-
+  const handleGuestLogin = () => {
+    // You can add any guest-specific logic here
+    dispatch(setUser(null));
+    dispatch(setToken(null));
+    navigation.navigate("Cart");
+  };
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -110,6 +118,17 @@ export default function Login({ navigation }) {
             Sign Up
           </Button>
         </View>
+        {!!fromCart &&
+          <View style={styles.guestContainer}>
+            <Button
+              mode="text"
+              onPress={handleGuestLogin}
+              textColor={COLORS.ERROR}
+              style={styles.guestButton}
+            >
+              Continue as Guest
+            </Button>
+          </View>}
       </View>
     </KeyboardAvoidingView>
   );
@@ -146,5 +165,12 @@ const styles = StyleSheet.create({
   },
   signupText: {
     color: COLORS.TEXT_SECONDARY,
+  },
+  guestContainer: {
+    marginTop: 28,
+    alignItems: 'center',
+  },
+  guestButton: {
+    marginTop: 8,
   },
 });

@@ -20,7 +20,7 @@ export const PriceDisplay = ({ variant }) => {
             <Text
                 style={[
                     styles.price,
-                    { color: hasDiscount ? COLORS.PRIMARY : COLORS.TEXT_PRIMARY }
+                    { color: hasDiscount ? COLORS.PROMO_RED : COLORS.PRIMARY }
                 ]}
             >
                 {formatPrice(calculated_amount, currency_code)}
@@ -46,6 +46,8 @@ const styles = StyleSheet.create({
     },
     price: {
         fontFamily: 'Poppins_600SemiBold',
+        fontSize: 18,
+    
     },
     originalPrice: {
         fontFamily: 'Poppins_400Regular',

@@ -1,23 +1,36 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { IconButton, Badge } from 'react-native-paper';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../../theme';
 import { getTotalCartCount } from '../../utils/cartUtils';
+import { showToast } from '../../store/actions/toast';
 
 const CartButton = () => {
     const navigation = useNavigation();
     const cart = useSelector((state) => state.groceryState.cart);
     const cartCount = getTotalCartCount(cart);
+    const loginUser = useSelector((state) => state.user.user)
+    const dispatch = useDispatch()
+    const handleCartClick = () => {
+        if (!loginUser?.id) {
+            dispatch(showToast("Please login to place order."))
+            navigation.navigate('Login', { fromCart: true });
 
+            return
+
+        }
+        navigation.navigate('Cart')
+
+    }
     return (
         <>
             <IconButton
                 icon="cart"
                 iconColor={COLORS.TEXT_WHITE}
                 size={24}
-                onPress={() => navigation.navigate('Cart')}
+                onPress={handleCartClick}
                 style={styles.cartButton}
             />
             {cartCount > 0 && (

@@ -5,7 +5,7 @@ import {
   REACT_NATIVE_PUBLIC_DEV_URL,
   REGIOD_ID,
 } from "../env";
-
+import { store } from "../store";
 export const baseURL = REACT_NATIVE_PUBLIC_DEV_URL;
 
 export const instance = axios.create({
@@ -17,28 +17,15 @@ export const instance = axios.create({
 });
 
 export const makeRequest = async (type, path, body = null, options = {}) => {
+  console.log("optionsare pojerpoivj", options?.headers);
 
-  console.log("optionsare pojerpoivj", options?.headers)
+  // Initialize headers object
+  const headers = {
+    ...options.headers, // Merge any headers passed in options
+  };
+
   try {
-    // Retrieve token from cookies
-    // const token = Cookies.get('auth-token');
-    const token = false;
 
-    // Setup headers
-    const headers = {
-      // 'auth-token': token ? token : null,
-      "x-publishable-api-key": PUBLISHABLE_API_KEY,
-      "region_id": REGIOD_ID,
-      ...options.headers,
-
-    };
-
-    // If the body is an instance of FormData, set the appropriate Content-Type
-    if (body instanceof FormData) {
-      headers["Content-Type"] = "multipart/form-data";
-    } else if (body) {
-      headers["Content-Type"] = "application/json";
-    }
 
     // Create the config object
     const config = {
@@ -56,10 +43,9 @@ export const makeRequest = async (type, path, body = null, options = {}) => {
       config: {
         timeout: config.timeout,
         credentials: config.credentials,
-        ...config
-      }
+        ...config,
+      },
     });
-
 
     let response;
 
@@ -69,7 +55,11 @@ export const makeRequest = async (type, path, body = null, options = {}) => {
         response = await instance.get(path, config);
         break;
       case "POST":
-        response = await instance.post(path, body, config);
+        if (body === null || body === undefined) {
+          response = await instance.post(path, {}, config); // Empty body
+        } else {
+          response = await instance.post(path, body, config); // Regular body
+        }
         break;
       case "PUT":
         response = await instance.put(path, body, config);
@@ -100,12 +90,19 @@ export const makeRequest = async (type, path, body = null, options = {}) => {
     throw error; // Re-throw error after logging/handling
   }
 };
-
 // Optional: Request interceptor for adding authentication or other common headers
 instance.interceptors.request.use(
   (config) => {
-    // Example: Add basic auth or other configuration if needed
-    // config.auth = { username, password };
+    const state = store.getState();
+    const token = state.user.token;
+
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+    config.headers["x-publishable-api-key"] = PUBLISHABLE_API_KEY;
+    config.headers["region_id"] = REGIOD_ID;
+
+
     return config;
   },
   (error) => {
@@ -126,7 +123,8 @@ instance.interceptors.response.use(
       // window.location.href = '/';
       // window.localStorage.clear();
     }
-    const code = error.response?.status;
-    return Promise.reject({ code });
+    // Extract and return the error message
+    const errorMessage = error.response?.data?.message || "An error occurred.";
+    return Promise.reject({ code: errorMessage });
   }
 );

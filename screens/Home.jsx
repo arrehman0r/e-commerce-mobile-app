@@ -2,18 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Text } from 'react-native-paper';
 import { useCategories } from '../services/queries';
-import CategoryHeader from '../components/CategoryHeader'; 
+import CategoryHeader from '../components/CategoryHeader';
 import CategoryProducts from '../components/CategoryProducts';
+import { useDispatch, useSelector } from 'react-redux';
+import { createCart } from '../services/api';
+import { setCartId } from '../store/actions/user';
 
 const Home = ({ navigation }) => {
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-  
-  const { 
-    data: categories = [], 
-    isLoading, 
-    isError, 
+  const dispatch = useDispatch()
+  const cartId = useSelector((state) => state.user.cartId)
+  const {
+    data: categories = [],
+    isLoading,
+    isError,
     error,
-    refetch 
+    refetch
   } = useCategories();
 
   useEffect(() => {
@@ -21,6 +25,24 @@ const Home = ({ navigation }) => {
       setSelectedCategoryId(categories[0].id);
     }
   }, [categories]);
+
+
+
+  useEffect(() => {
+    createUserCart()
+  }, [cartId])
+
+
+  const createUserCart = async () => {
+    if (cartId) return
+    else {
+      const res = await createCart()
+      console.log("res of cart ", res?.cart?.id)
+      const userCartId = res?.cart?.id
+      dispatch(setCartId(userCartId))
+    }
+
+  }
 
   if (isLoading) {
     return (
@@ -46,7 +68,7 @@ const Home = ({ navigation }) => {
         onSelect={setSelectedCategoryId}
       />
       {selectedCategoryId && (
-        <CategoryProducts categoryId={selectedCategoryId} navigation= {navigation} />
+        <CategoryProducts categoryId={selectedCategoryId} navigation={navigation} />
       )}
     </View>
   );

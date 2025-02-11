@@ -21,6 +21,7 @@ const CategoryHeader = ({ categories, selectedId, onSelect }) => {
             selected={selectedId === category.id}
             onPress={() => onSelect(category.id)}
             style={styles.categoryChip}
+            showSelectedCheck={false}
           >
             {category.name}
           </Chip>
@@ -36,6 +37,7 @@ const styles = StyleSheet.create({
   },
   categoryScroll: {
     paddingHorizontal: 16,
+    marginight: 200,
     marginBottom: 8,
   },
   categoryChip: {

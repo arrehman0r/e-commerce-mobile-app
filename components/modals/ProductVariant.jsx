@@ -1,12 +1,12 @@
 
-import React, { useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, Image } from 'react-native';
+import React from 'react';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import {
     Text,
     Button,
     Modal,
     IconButton,
-    Chip
+
 } from 'react-native-paper';
 import { COLORS } from '../../theme';
 import { PriceDisplay } from '../PriceDisplay';
@@ -19,10 +19,21 @@ export const ProductVariantModal = ({ visible, onDismiss, product, selectedVaria
             visible={visible}
             onDismiss={onDismiss}
             contentContainerStyle={styles.modalContainer}
+            style={styles.modalWrapper}
         >
-            <Text variant="headlineSmall" style={styles.modalTitle}>
-                {product.title}
-            </Text>
+           
+            <View style={styles.modalHeader}>
+                <Text variant="headlineSmall" style={styles.modalTitle}>
+                    {product.title}
+                </Text>
+                <IconButton
+                    icon="close"
+                    size={24}
+                    onPress={onDismiss}
+                    style={styles.closeIcon}
+                    iconColor={COLORS.TEXT_SECONDARY}
+                />
+            </View>
 
             <Text variant="bodyMedium" style={styles.sectionTitle}>
                 {product.options[0]?.title || 'Select Variant'}:
@@ -80,7 +91,13 @@ export const ProductVariantModal = ({ visible, onDismiss, product, selectedVaria
             <Button
                 mode="contained"
                 onPress={onDismiss}
-                style={styles.addButton}
+
+                style={[
+                    styles.addButton,
+                    {
+                        backgroundColor: (!selectedVariant || cartCount === 0) ? COLORS.DISABLED : COLORS.PRIMARY
+                    }
+                ]}
                 disabled={!selectedVariant || cartCount === 0}
             >
                 Add to Cart
@@ -121,14 +138,31 @@ const VariantSelector = ({ variant, isSelected, onSelect }) => {
 
 const styles = StyleSheet.create({
 
+    modalWrapper: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     modalContainer: {
         backgroundColor: COLORS.CARD_BACKGROUND,
         margin: 20,
         padding: 20,
         borderRadius: 12,
-
-
-
+        width: '90%', // Set a specific width
+        maxWidth: 400, // Maximum width for larger screens
+        alignSelf: 'center',
+    },
+    modalHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+    closeIcon: {
+        margin: 0, // Remove default margin
+        position: 'absolute',
+        right: -12, // Adjust if needed
+        top: -12, // Adjust if needed
     },
     modalTitle: {
         fontFamily: 'Poppins_600SemiBold',
@@ -181,7 +215,6 @@ const styles = StyleSheet.create({
         color: COLORS.TEXT_PRIMARY,
     },
     addButton: {
-        backgroundColor: COLORS.PRIMARY,
 
         marginTop: 24,
     },

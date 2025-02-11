@@ -1,11 +1,42 @@
-import { PUBLISHABLE_API_KEY, REACT_NATIVE_PUBLIC_AUTH_URL, REGIOD_ID } from "../env";
+import { PUBLISHABLE_API_KEY, REACT_NATIVE_PUBLIC_AUTH_URL, REACT_NATIVE_PUBLIC_DEV_URL, REGIOD_ID } from "../env";
 import { showToast } from "../store/actions/toast";
 import { makeRequest } from "./instance";
 
 export const getAllCategories = () => {
   return makeRequest("get", "product-categories");
 }
+export const createCart = () => {
+  return makeRequest("post", "carts", { region_id: REGIOD_ID })
+}
 
+export const addLineItem = (id, body) => {
+  return makeRequest("post", `carts/${id}/line-items`, body)
+}
+
+export const getShippingOptions = (cartId) => {
+  return makeRequest("get", `shipping-options?cart_id=${cartId}`)
+}
+
+export const getPaymentMethods = () => {
+  return makeRequest("get", `payment-providers?region_id=${REGIOD_ID}`)
+}
+
+export const paymentCollection = (cartId) => {
+  return makeRequest("post", `payment-collections`, { "cart_id": cartId })
+}
+export const createPaymentSession = (paymentId) => {
+  return makeRequest("post", `payment-collections/${paymentId}/payment-sessions`, { "provider_id": "pp_system_default" })
+}
+export const getTaxes = (id) => {
+  return makeRequest("post", `carts/${id}/taxes`)
+}
+
+export const addCartCustomerAddress = (cartId, body) => {
+  return makeRequest("post", `carts/${cartId}`, body)
+}
+export const completeCart = (cartId) => {
+  return makeRequest("POST", `carts/${cartId}/complete`);
+};
 
 export const getCategoryProducts = async (categoryId, params = {}) => {
   const searchParams = new URLSearchParams({
@@ -81,25 +112,31 @@ export const registerUser = async (customerData, token) => {
 };
 
 
-export const getUserProfile = async (token) => {
-  try {
-      
-    const response = await makeRequest("get", "customers/me", null, {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-        "x-publishable-api-key": PUBLISHABLE_API_KEY
-      }
-    });
-    
-    console.log('Profile response:', response);
-    return response;
-  } catch (error) {
-    if (error.code === 401) {
-      console.error("Authentication failed. Token might be invalid or expired");
-      // You might want to trigger a logout or token refresh here
-    }
-    console.error("Error on getting user:", error);
-    throw error;
-  }
+export const getUserProfile = () => {
+
+
+  return makeRequest("get", "customers/me")
+}
+
+
+export const getCustomerOrders = (params = {}) => {
+  const queryString = new URLSearchParams({
+    limit: params.limit || 5,
+    offset: params.offset || 0
+  }).toString();
+
+  return makeRequest("get", `orders?${queryString}`);
+}
+
+
+export const getUserAddresses = () => {
+  return makeRequest("get", "customers/me/addresses")
+}
+
+export const addUserAddress = (body) => {
+  return makeRequest("post", "customers/me/addresses", body);
 };
+
+export const deleteUserAddress = (id) => {
+  return makeRequest("DELETE", `customers/me/addresses/${id}`)
+}
