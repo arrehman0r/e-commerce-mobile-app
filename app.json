@@ -13,7 +13,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.arrehman.foodapp"
     },
     "android": {
       "kotlinVersion": "1.9.25",
