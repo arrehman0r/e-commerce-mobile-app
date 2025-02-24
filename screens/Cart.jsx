@@ -9,7 +9,7 @@ import { showToast } from '../store/actions/toast';
 import { clearCart, removeFromCart } from '../store/actions/grocery';
 import ShippingOptions from '../components/cart/ShippingOptions';
 import { useShippingOptions } from '../services/queries';
-import { addCartCustomerAddress, completeCart, confirmOrder, createPaymentSession, getTaxes, paymentCollection } from '../services/api';
+import { addCartCustomerAddress, addShippingToCart, completeCart, confirmOrder, createPaymentSession, getTaxes, paymentCollection } from '../services/api';
 import { setCartId } from '../store/actions/user';
 import { validateEmail, validateFullName, validatePhone } from '../utils/formUtils';
 import { setLoading } from '../store/actions/loader';
@@ -119,7 +119,7 @@ const Cart = ({ navigation }) => {
         const selectedOption = shippingOptions.find(option => option.id === selectedShipping);
         return selectedOption?.calculated_price?.calculated_amount ?? 0;
     };
-
+    console.log("selectedShipping", selectedShipping)
     const handlePlaceOrder = async () => {
         dispatch(setLoading(true))
         scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
@@ -166,13 +166,18 @@ const Cart = ({ navigation }) => {
             await addMultipleLineItems(cartId, lineItems);
 
             const paymentRes = await paymentCollection(cartId);
+            const addshippingBody = {
+                "option_id": selectedShipping
+            }
+            const addShipping = await addShippingToCart(cartId, addshippingBody)
+            console.log("paymentSessionREs", paymentRes, addShipping)
+
             if (!paymentRes?.payment_collection?.id) {
                 throw new Error('Failed to create payment collection');
             }
 
             const paymentCollectionId = paymentRes.payment_collection.id;
-            await createPaymentSession(paymentCollectionId);
-
+            const paymentSessionREs = await createPaymentSession(paymentCollectionId);
             const confirmOrderRes = await completeCart(cartId);
             console.log("confirm order response:", confirmOrderRes);
 
@@ -181,13 +186,13 @@ const Cart = ({ navigation }) => {
                 dispatch(showToast('Order placed successfully!'));
                 dispatch(setCartId(null));
                 dispatch(clearCart());
-                navigation.navigate('OrderDetail', { 
+                navigation.navigate('OrderDetail', {
                     orderDetails: confirmOrderRes // The order response from your API
-                  });
+                });
             }
         } catch (error) {
             console.error('Place order error:', error);
-            dispatch(showToast(error.message || 'Failed to place order. Please try again.'));
+            dispatch(showToast(error.code || 'Failed to place order. Please try again.'));
             dispatch(setCartId(null));
             dispatch(clearCart());
         } finally {

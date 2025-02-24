@@ -144,6 +144,7 @@ const styles = StyleSheet.create({
   },
   image: {
     height: 170,
+    objectFit: 'contain',
     borderTopLeftRadius: 8,
     borderBottomLeftRadius: 8,
   },

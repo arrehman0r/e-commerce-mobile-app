@@ -2,11 +2,12 @@ import React from 'react';
 import { StyleSheet, ScrollView, View } from 'react-native';
 import { Card, Chip } from 'react-native-paper';
 
+
 const CategoryHeader = ({ categories, selectedId, onSelect }) => {
   return (
     <View>
       <Card style={styles.heroCard}>
-        <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
+        <Card.Cover source={{ uri: 'https://images.deliveryhero.io/image/fd-mm/LH/nb5d-listing.jpg' }} />
       </Card>
       
       <ScrollView 

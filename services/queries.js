@@ -44,6 +44,7 @@ export function useShippingOptions(cartId) {
     queryKey: [QUERY_KEYS.SHIPPING_OPTIONS, cartId],
     queryFn: async () => {
       const response = await getShippingOptions(cartId);
+      console.log("response of shipping is",  response)
       return response?.shipping_options ?? [];
     },
     enabled: !!cartId,

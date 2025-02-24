@@ -20,7 +20,9 @@ export const getShippingOptions = (cartId) => {
 export const getPaymentMethods = () => {
   return makeRequest("get", `payment-providers?region_id=${REGIOD_ID}`)
 }
-
+export const addShippingToCart = (cartId, body) => {
+  return makeRequest("post", `carts/${cartId}/shipping-methods`, body)
+}
 export const paymentCollection = (cartId) => {
   return makeRequest("post", `payment-collections`, { "cart_id": cartId })
 }
