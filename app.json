@@ -25,12 +25,25 @@
       "package": "com.arrehman.foodapp"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "build": {
+        "babel": {
+          "include": [
+            "@expo/vector-icons"
+          ]
+        }
+      },
+      "corsProxyOrigins": [
+        "https://pizza.al-mizan.store"
+      ]
     },
     "extra": {
       "eas": {
         "projectId": "2cffac79-cc44-4cb8-ac60-389b54b25875"
       }
-    }
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
