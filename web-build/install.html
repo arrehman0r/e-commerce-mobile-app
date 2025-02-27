@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Install Sips & Savour</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Primary colors */
+      --primary: #DA291C;
+      --primary-dark: #B71D1A;
+      --primary-light: #FF443A;
+      
+      /* Secondary colors */
+      --secondary: #FFC72C;
+      --secondary-dark: #4d4d4d;
+      --secondary-light: #FFD54F;
+      
+      /* Accent colors */
+      --accent-green: #27251F;
+      --accent-orange: #FF8C39;
+      --accent-brown: #2B170C;
+      
+      /* Background colors */
+      --background: #FFFFFF;
+      --background-light: #FFF8E7;
+      --background-dark: #F5F5F5;
+      
+      /* Text colors */
+      --text-primary: #27251F;
+      --text-secondary: #4D4D4D;
+      --text-light: #767676;
+      --text-white: #FFFFFF;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-light);
+      color: var(--text-primary);
+    }
+    
+    h1, h2, h3 {
+      font-family: 'Playfair Display', serif;
+    }
+    
+    .heading-large {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 32px;
+      line-height: 40px;
+    }
+    
+    .heading-medium {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 28px;
+      line-height: 36px;
+    }
+    
+    .title-medium {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      font-size: 16px;
+      letter-spacing: 0.15px;
+      line-height: 24px;
+    }
+    
+    .body-medium {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      letter-spacing: 0.25px;
+      line-height: 20px;
+    }
+    
+    .label-medium {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      line-height: 16px;
+    }
+    
+    .ios-instruction {
+      display: none;
+    }
+    
+    .android-instruction {
+      display: none;
+    }
+    
+    .desktop-instruction {
+      display: none;
+    }
+    
+    .install-button {
+      animation: pulse 2s infinite;
+      background-color: var(--primary);
+      color: var(--text-white);
+      transition: background-color 0.3s;
+    }
+    
+    .install-button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(218, 41, 28, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(218, 41, 28, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(218, 41, 28, 0);
+      }
+    }
+    
+    .instruction-number {
+      background-color: var(--secondary);
+      color: var(--text-primary);
+    }
+    
+    .card {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-header {
+      background-color: var(--primary);
+      padding: 1.5rem;
+    }
+    
+    .card-content {
+      background-color: var(--background);
+      padding: 1.5rem;
+    }
+    
+    .instruction-card {
+      background-color: var(--background-dark);
+      border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="max-w-md mx-auto py-12 px-4">
+    <div class="card">
+      <div class="card-header text-center">
+        <h1 class="heading-large text-white">Sips & Savour</h1>
+        <p class="title-medium text-white opacity-90 mt-1">Install our app for the best experience</p>
+      </div>
+      
+      <div class="card-content">
+        <div id="install-banner" class="mb-6 bg-yellow-50 p-4 rounded-lg border border-yellow-100 text-center" style="background-color: var(--background-light); border-color: var(--secondary-light);">
+          <button id="install-button" class="install-button py-3 px-6 rounded-lg font-medium text-lg shadow-md">
+            Install App
+          </button>
+          <p class="body-medium mt-2" style="color: var(--text-secondary);">Tap to install our app on your device</p>
+        </div>
+        
+        <!-- iOS Instructions -->
+        <div id="ios-instruction" class="ios-instruction space-y-4 mb-6">
+          <div class="flex items-center justify-center">
+            <div class="instruction-card p-4 text-center w-full">
+              <h3 class="heading-medium mb-2" style="color: var(--text-primary); font-size: 22px;">Install on iOS</h3>
+              <div class="flex justify-center mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--accent-brown);">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                </svg>
+              </div>
+              <ol class="text-left space-y-3 mt-3" style="color: var(--text-secondary);">
+                <li class="flex items-start">
+                  <span class="instruction-number rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0">1</span>
+                  <span class="body-medium">Tap the <strong>Share</strong> button at the bottom of your screen</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="instruction-number rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0">2</span>
+                  <span class="body-medium">Scroll down and tap <strong>Add to Home Screen</strong></span>
+                </li>
+                <li class="flex items-start">
+                  <span class="instruction-number rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0">3</span>
+                  <span class="body-medium">Tap <strong>Add</strong> in the top right</span>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Android Instructions -->
+        <div id="android-instruction" class="android-instruction space-y-4 mb-6">
+          <div class="flex items-center justify-center">
+            <div class="instruction-card p-4 text-center w-full">
+              <h3 class="heading-medium mb-2" style="color: var(--text-primary); font-size: 22px;">Install on Android</h3>
+              <div class="flex justify-center mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--accent-brown);">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <ol class="text-left space-y-3 mt-3" style="color: var(--text-secondary);">
+                <li class="flex items-start">
+                  <span class="instruction-number rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0">1</span>
+                  <span class="body-medium">Tap the <strong>menu button (⋮)</strong> in the top right</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="instruction-number rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0">2</span>
+                  <span class="body-medium">Tap <strong>Install App</strong></span>
+                </li>
+                <li class="flex items-start">
+                  <span class="instruction-number rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0">3</span>
+                  <span class="body-medium">Tap <strong>Install</strong> to confirm</span>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Desktop Instructions -->
+        <div id="desktop-instruction" class="desktop-instruction space-y-4">
+          <div class="flex items-center justify-center">
+            <div class="instruction-card p-4 text-center w-full">
+              <h3 class="heading-medium mb-2" style="color: var(--text-primary); font-size: 22px;">Install on Desktop</h3>
+              <div class="flex justify-center mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="color: var(--accent-brown);">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <ol class="text-left space-y-3 mt-3" style="color: var(--text-secondary);">
+                <li class="flex items-start">
+                  <span class="instruction-number rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0">1</span>
+                  <span class="body-medium">Look for the <strong>install icon</strong> in your browser's address bar</span>
+                </li>
+                <li class="flex items-start">
+                  <span class="instruction-number rounded-full w-6 h-6 flex items-center justify-center mr-2 flex-shrink-0">2</span>
+                  <span class="body-medium">Click <strong>Install</strong> to add the app to your desktop</span>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+        
+        
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Detect device OS
+    function detectOS() {
+      const userAgent = window.navigator.userAgent;
+      
+      if (/iPhone|iPad|iPod/.test(userAgent)) {
+        return 'iOS';
+      } else if (/Android/.test(userAgent)) {
+        return 'Android';
+      } else {
+        return 'Desktop';
+      }
+    }
+    
+    // Show relevant instructions
+    function showInstructions() {
+      const os = detectOS();
+      document.getElementById('ios-instruction').style.display = os === 'iOS' ? 'block' : 'none';
+      document.getElementById('android-instruction').style.display = os === 'Android' ? 'block' : 'none';
+      document.getElementById('desktop-instruction').style.display = os === 'Desktop' ? 'block' : 'none';
+    }
+    
+    let deferredPrompt;
+    
+    // Check if the browser supports installation
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Prevent Chrome 67 and earlier from automatically showing the prompt
+      e.preventDefault();
+      // Stash the event so it can be triggered later
+      deferredPrompt = e;
+      
+      // Show the install button
+      const installButton = document.getElementById('install-button');
+      installButton.addEventListener('click', async () => {
+        // Show the install prompt
+        deferredPrompt.prompt();
+        // Wait for the user to respond to the prompt
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User response to the install prompt: ${outcome}`);
+        // We've used the prompt, and can't use it again, throw it away
+        deferredPrompt = null;
+      });
+    });
+    
+    // If app is already installed or can't be installed
+    window.addEventListener('appinstalled', (evt) => {
+      document.getElementById('install-banner').innerHTML = '<p class="title-medium" style="color: #2BB673; font-weight: 500;">App installed successfully!</p>';
+    });
+    
+    // Run on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      showInstructions();
+    });
+  </script>
+</body>
+</html>
